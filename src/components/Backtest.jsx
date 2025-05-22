@@ -10,6 +10,7 @@ export default function Backtest() {
 
   const strategies = [
     "EMA Crossover",
+    "Bollinger Bands",
     "XGBoost",
     "Hybrid (LSTM + XGBoost)",
     "Random Forest",
