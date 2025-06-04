@@ -7,6 +7,7 @@ export default function Backtest() {
   const [toDate, setToDate] = useState("");
   const [result, setResult] = useState(null);
   const [deployStatus, setDeployStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const strategies = [
     "EMA Crossover",
@@ -23,15 +24,25 @@ export default function Backtest() {
       return;
     }
 
-    const response = await fetch("http://0.0.0.0:8000/api/run-backtest", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ symbol, strategy, from_date: fromDate, to_date: toDate }),
-    });
-
-    const data = await response.json();
-    setResult(data);
+    setLoading(true);
+    setResult(null);
     setDeployStatus("");
+
+    try {
+      const response = await fetch("http://0.0.0.0:8000/api/run-backtest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ symbol, strategy, from_date: fromDate, to_date: toDate }),
+      });
+
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      console.error("Backtest failed:", error);
+      setResult({ success: false, error: "Something went wrong. Please try again." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeployLive = async () => {
@@ -41,7 +52,7 @@ export default function Backtest() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ symbol, strategy }),
       });
-  
+
       const data = await response.json();
       if (data.success) {
         setDeployStatus("✅ Strategy deployed successfully!");
@@ -51,13 +62,11 @@ export default function Backtest() {
     } catch (error) {
       setDeployStatus("❌ Network error while deploying strategy.");
     }
-  
-    // Optional: Clear the message after 5 seconds
+
     setTimeout(() => {
       setDeployStatus("");
     }, 5000);
   };
-  
 
   return (
     <div className="max-w-xl w-full mx-auto space-y-6 animate-fade-in">
@@ -109,10 +118,22 @@ export default function Backtest() {
       {/* Run backtest button */}
       <button
         onClick={handleRunBacktest}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition animate-slide-up"
+        disabled={loading}
+        className={`w-full font-semibold py-3 rounded-lg transition animate-slide-up ${
+          loading
+            ? "bg-blue-300 text-white cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+        }`}
       >
         🚀 Run Backtest
       </button>
+
+      {/* Loading indicator */}
+      {loading && (
+        <div className="text-center text-blue-600 font-medium animate-pulse">
+          ⏳ Running backtest... please wait.
+        </div>
+      )}
 
       {/* Result panel */}
       {result && (
