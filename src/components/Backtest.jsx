@@ -13,9 +13,9 @@ export default function Backtest() {
     "EMA Crossover",
     "Bollinger Bands",
     "XGBoost",
-    "Hybrid (LSTM + XGBoost)",
+    "Hybrid LSTM XGBoost",
     "Random Forest",
-    "Hybrid(EMA + XGBoost)",
+    "Hybrid EMA XGBoost",
   ];
 
   const handleRunBacktest = async () => {
