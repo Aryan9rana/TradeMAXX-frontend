@@ -107,7 +107,7 @@ export default function DeployLive() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-blue-700 text-center">⚙️ Live Deployments</h2>
+      <h2 className="text-2xl font-bold text-blue-700 text-center">Live Deployments</h2>
 
       {loading ? (
         <p className="text-center text-gray-600">Loading...</p>
@@ -132,13 +132,13 @@ export default function DeployLive() {
                       onClick={() => toggleLogs(symbol, strategy)}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm"
                     >
-                      📜 {visibleLogs[key] ? "Hide Logs" : "View Logs"}
+                       {visibleLogs[key] ? "Hide" : "Show Details"}
                     </button>
                     <button
                       onClick={() => handleCancel(symbol, strategy)}
                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm"
                     >
-                      ❌ Cancel
+                      Cancel
                     </button>
                   </div>
                 </div>
